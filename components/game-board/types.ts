@@ -1,3 +1,5 @@
+import { VillageState } from "../village/types";
+
 export interface HexCoordinate {
   q: number; // Column (x-axis)
   r: number; // Row (y-axis)
@@ -37,7 +39,7 @@ export interface HexTile {
   bonus?: ResourceBonus;
   isVillage?: boolean;
   villageLevel?: number;
-  villageState?: any; // State for AI villages (will import VillageState later)
+  villageState?: VillageState; // State for AI villages
   level?: number; // Tile upgrade level (1-100)
   neighborTypes?: TileType[]; // Types of neighboring tiles for transition textures
 }

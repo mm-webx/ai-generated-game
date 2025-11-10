@@ -3,16 +3,9 @@
 import { HexTile as HexTileType, TileCost, TileType } from "./types";
 import { HexTile } from "./HexTile";
 import { calculateTileClaimCost, calculateVillageClaimCost } from "./utils";
-import { getTransitionTextureId } from "./texture-utils";
 
 // Generate transition texture patterns for terrain combinations
 function generateTransitionPatterns() {
-  const terrainTypes: TileType[] = [
-    "grassland", "plains", "desert", "tundra", "snow",
-    "coast", "ocean", "lake", "mountain", "hill",
-    "forest", "jungle", "marsh"
-  ];
-
   const patterns: JSX.Element[] = [];
   const createdPatterns = new Set<string>();
 

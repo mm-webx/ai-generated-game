@@ -20,7 +20,7 @@ export function BuildingJobsDisplay({
   tooltipWidth = 0,
   containerLeft = 0,
 }: BuildingJobsDisplayProps) {
-  const { buildingJobs, maxBuildingJobs, villageState, gameTime, speed } = useTimeControl();
+  const { buildingJobs, maxBuildingJobs, villageState, gameTime } = useTimeControl();
   const [isShiftPressed, setIsShiftPressed] = useState(false);
   const [alignOffset, setAlignOffset] = useState<number>(0);
   const [remainingTimes, setRemainingTimes] = useState<Record<string, number>>({});
@@ -32,6 +32,7 @@ export function BuildingJobsDisplay({
   // Update remaining times for all buildings in queue
   useEffect(() => {
     if (!villageState.buildingQueue || Object.keys(villageState.buildingQueue).length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Resetting state based on prop changes is a valid use case
       setRemainingTimes({});
       return;
     }

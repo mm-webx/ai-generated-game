@@ -1,4 +1,5 @@
 import { HexCoordinate, HexTile, ResourceBonus, TileType } from "./types";
+import { VillageState } from "../village/types";
 
 /**
  * Convert hex coordinates to pixel coordinates
@@ -328,7 +329,7 @@ export function generateVillagePositions(
  * Generate village state based on distance from player village
  * Further villages have higher levels and more upgrades
  */
-export function generateVillageState(distance: number): any {
+export function generateVillageState(distance: number): VillageState {
   // Base level increases with distance
   const baseLevel = Math.max(1, Math.floor(distance / 2));
   const exp = baseLevel * 100; // Some exp based on level

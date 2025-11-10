@@ -606,7 +606,6 @@ export function GameHeader() {
     handleSpeedChange,
     formatTime,
     gameOver,
-    resetGame,
     resetGameFromGameOver,
   } = useTimeControl();
 

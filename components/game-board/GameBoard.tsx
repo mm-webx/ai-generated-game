@@ -4,8 +4,6 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   HexTile,
   HexCoordinate,
-  TileCost,
-  DEFAULT_TILE_COST,
   ResourceBonus,
 } from "./types";
 import { HexMap } from "./HexMap";
@@ -15,7 +13,6 @@ import {
   hexKey,
   generateTileType,
   getTilesInRange,
-  getTileBonus,
   calculateTileBonus,
   calculateUpgradeCost,
   hexDistanceCube,
@@ -31,14 +28,12 @@ interface GameBoardProps {
   mapWidth?: number;
   mapHeight?: number;
   tileSize?: number;
-  tileCost?: TileCost;
 }
 
 export function GameBoard({
   mapWidth = 15,
   mapHeight = 15,
   tileSize = 30,
-  tileCost = DEFAULT_TILE_COST,
 }: GameBoardProps) {
   const { resources, setResources, setTileBonuses, setSelectedTile, villageLevel, setIsVillagePanelOpen } = useTimeControl();
   const [zoom, setZoom] = useState(1);
@@ -99,7 +94,7 @@ const TILES_STORAGE_KEY = "village-game-tiles";
     });
 
     // Calculate neighbor types for transition textures
-    tiles.forEach((tile, key) => {
+    tiles.forEach((tile) => {
       const neighbors = getHexNeighbors(tile.coordinate);
       const neighborTypes: TileType[] = [];
       neighbors.forEach((neighborCoord) => {
@@ -174,6 +169,7 @@ const TILES_STORAGE_KEY = "village-game-tiles";
         tilesArray.forEach((tile) => {
           tilesMap.set(hexKey(tile.coordinate), tile);
         });
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Loading from localStorage is a valid use case
         setTiles(tilesMap);
       }
     } catch (error) {
@@ -399,11 +395,12 @@ const TILES_STORAGE_KEY = "village-game-tiles";
 
       setTiles(newTiles);
     },
-    [tiles, tileCost, canAfford, resources, setResources, setIsVillagePanelOpen, hasDragged, updateNeighborTypes]
+    [tiles, canAfford, resources, setResources, setIsVillagePanelOpen, hasDragged, updateNeighborTypes]
   );
 
   // Update village level in tiles when villageLevel changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncing prop changes to state is a valid use case
     setTiles((prevTiles) => {
       const newTiles = new Map(prevTiles);
       const centerKey = hexKey({ q: 0, r: 0 });

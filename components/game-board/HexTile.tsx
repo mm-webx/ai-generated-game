@@ -73,7 +73,6 @@ export function HexTile({
   onTileClick,
   onTileHover,
   canAfford,
-  cost,
 }: HexTileProps) {
   const { x, y } = hexToPixel(tile.coordinate.q, tile.coordinate.r, size);
 

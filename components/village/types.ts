@@ -10,7 +10,6 @@ import {
   Sword,
   BowArrow,
   Sparkles,
-  User,
 } from "lucide-react";
 
 export type BuildingType =

@@ -30,7 +30,7 @@ export function BuildingCard({
   currentLevel,
   onUpgrade,
 }: BuildingCardProps) {
-  const { resources, villageState, buildingJobs, maxBuildingJobs, gameTime, speed } = useTimeControl();
+  const { resources, villageState, buildingJobs, maxBuildingJobs, gameTime } = useTimeControl();
   const buildingDef = BUILDING_DEFINITIONS[buildingType];
   const Icon = buildingDef.icon;
   const nextLevel = currentLevel + 1;
@@ -47,6 +47,7 @@ export function BuildingCard({
   
   useEffect(() => {
     if (!buildInfo) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Resetting state based on prop changes is a valid use case
       setRemainingTime(null);
       return;
     }
@@ -128,7 +129,7 @@ export function BuildingCard({
     if (buildingDef.resourceBonus) {
       const bonus = buildingDef.resourceBonus(nextLevel);
       // Find the resource with the highest bonus value
-      const resourceEntries = Object.entries(bonus).filter(([_, value]) => value && value > 0) as Array<[keyof typeof bonus, number]>;
+      const resourceEntries = Object.entries(bonus).filter(([, value]) => value && value > 0) as Array<[keyof typeof bonus, number]>;
       
       if (resourceEntries.length > 0) {
         // Sort by value descending and get the first (highest) one
@@ -347,7 +348,7 @@ export function BuildingCard({
     if (buildingDef.resourceBonus) {
       const bonus = buildingDef.resourceBonus(level);
       // Find the resource with the highest bonus value
-      const resourceEntries = Object.entries(bonus).filter(([_, value]) => value && value > 0) as Array<[keyof typeof bonus, number]>;
+      const resourceEntries = Object.entries(bonus).filter(([, value]) => value && value > 0) as Array<[keyof typeof bonus, number]>;
       
       if (resourceEntries.length > 0) {
         // Sort by value descending and get the first (highest) one

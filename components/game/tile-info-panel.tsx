@@ -1,6 +1,6 @@
 "use client";
 
-import { HexTile, TileCost } from "@/components/game-board/types";
+import { HexTile } from "@/components/game-board/types";
 import { useTimeControl } from "@/components/game-header";
 import { calculateUpgradeCost, calculateTileBonus, calculateTileClaimCost, calculateVillageClaimCost } from "@/components/game-board/utils";
 import {
@@ -113,8 +113,8 @@ export function TileInfoPanel({
     : false;
 
   // Collect all bonuses/resources to display
-  const bonuses = tile.bonus ? Object.entries(tile.bonus).filter(([_, value]) => value && value > 0) : [];
-  const nextBonuses = nextLevelBonus ? Object.entries(nextLevelBonus).filter(([_, value]) => value && value > 0) : [];
+  const bonuses = tile.bonus ? Object.entries(tile.bonus).filter(([, value]) => value && value > 0) : [];
+  const nextBonuses = nextLevelBonus ? Object.entries(nextLevelBonus).filter(([, value]) => value && value > 0) : [];
 
   return (
     <div className="fixed bottom-4 left-4 w-[33.333333%] z-40">
