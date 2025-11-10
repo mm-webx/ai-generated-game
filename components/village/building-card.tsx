@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import React from "react";
 import { Building, BUILDING_DEFINITIONS } from "./types";
 import { Resources } from "../game/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
@@ -169,7 +170,7 @@ export function BuildingCard({
   };
 
   const formatCost = (cost: Resources) => {
-    const parts: JSX.Element[] = [];
+    const parts: React.ReactElement[] = [];
     if (cost.food > 0) {
       const Icon = RESOURCE_ICONS.food;
       const hasEnough = resources.food >= cost.food;
@@ -273,7 +274,7 @@ export function BuildingCard({
   const getBonusText = (level: number) => {
     if (buildingDef.resourceBonus) {
       const bonus = buildingDef.resourceBonus(level);
-      const parts: JSX.Element[] = [];
+      const parts: React.ReactElement[] = [];
       if (bonus.food) {
         const Icon = RESOURCE_ICONS.food;
         parts.push(

@@ -5,6 +5,8 @@ import {
   HexTile,
   HexCoordinate,
   ResourceBonus,
+  TileType,
+  TileCost,
 } from "./types";
 import { HexMap } from "./HexMap";
 import { ZoomControls } from "./zoom-controls";
@@ -35,7 +37,14 @@ export function GameBoard({
   mapHeight = 15,
   tileSize = 30,
 }: GameBoardProps) {
-  const { resources, setResources, setTileBonuses, setSelectedTile, villageLevel, setIsVillagePanelOpen } = useTimeControl();
+  const {
+    resources,
+    setResources,
+    setTileBonuses,
+    setSelectedTile,
+    villageLevel,
+    setIsVillagePanelOpen,
+  } = useTimeControl();
   const [zoom, setZoom] = useState(1);
   const [panX, setPanX] = useState(0);
   const [panY, setPanY] = useState(0);
@@ -44,7 +53,7 @@ export function GameBoard({
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [hasDragged, setHasDragged] = useState(false);
 
-const TILES_STORAGE_KEY = "village-game-tiles";
+  const TILES_STORAGE_KEY = "village-game-tiles";
 
   // Generate initial map
   const initialTiles = useMemo(() => {
@@ -73,7 +82,11 @@ const TILES_STORAGE_KEY = "village-game-tiles";
     }
 
     // Generate 7 AI villages spread across the map
-    const aiVillagePositions = generateVillagePositions(mapWidth, mapHeight, playerVillageCoord);
+    const aiVillagePositions = generateVillagePositions(
+      mapWidth,
+      mapHeight,
+      playerVillageCoord
+    );
     aiVillagePositions.forEach((aiVillageCoord) => {
       const key = hexKey(aiVillageCoord);
       const tile = tiles.get(key);
@@ -123,7 +136,7 @@ const TILES_STORAGE_KEY = "village-game-tiles";
         visibility: "owned" as const,
         isVillage: true,
         villageLevel: 1, // Use constant initial value to avoid hydration mismatch
-        type: "grassland", // Village is always on grassland
+        type: "grassland" as TileType, // Village is always on grassland
         level: 1, // Village starts at level 1
         bonus: { food: 5, wood: 3, stone: 1 }, // Village base production
       };
@@ -157,7 +170,9 @@ const TILES_STORAGE_KEY = "village-game-tiles";
     return initialTiles;
   }, [initialTiles]);
 
-  const [tiles, setTiles] = useState<Map<string, HexTile>>(() => getInitialTiles());
+  const [tiles, setTiles] = useState<Map<string, HexTile>>(() =>
+    getInitialTiles()
+  );
 
   // Load tiles from localStorage after mount (client-only)
   useEffect(() => {
@@ -180,7 +195,7 @@ const TILES_STORAGE_KEY = "village-game-tiles";
   // Save tiles to localStorage every 10 seconds
   useEffect(() => {
     if (typeof window === "undefined") return;
-    
+
     const saveTiles = () => {
       try {
         const tilesArray = Array.from(tiles.values());
@@ -213,28 +228,31 @@ const TILES_STORAGE_KEY = "village-game-tiles";
   );
 
   // Helper function to update neighbor types for tiles
-  const updateNeighborTypes = useCallback((tilesMap: Map<string, HexTile>, coord: HexCoordinate) => {
-    const affectedCoords = new Set<HexCoordinate>();
-    affectedCoords.add(coord);
-    getHexNeighbors(coord).forEach(nCoord => affectedCoords.add(nCoord));
-    
-    affectedCoords.forEach(affectedCoord => {
-      const key = hexKey(affectedCoord);
-      const affectedTile = tilesMap.get(key);
-      if (affectedTile) {
-        const neighbors = getHexNeighbors(affectedCoord);
-        const neighborTypes: TileType[] = [];
-        neighbors.forEach((neighborCoord) => {
-          const neighborKey = hexKey(neighborCoord);
-          const neighbor = tilesMap.get(neighborKey);
-          if (neighbor && neighbor.type !== affectedTile.type) {
-            neighborTypes.push(neighbor.type);
-          }
-        });
-        affectedTile.neighborTypes = neighborTypes;
-      }
-    });
-  }, []);
+  const updateNeighborTypes = useCallback(
+    (tilesMap: Map<string, HexTile>, coord: HexCoordinate) => {
+      const affectedCoords = new Set<HexCoordinate>();
+      affectedCoords.add(coord);
+      getHexNeighbors(coord).forEach((nCoord) => affectedCoords.add(nCoord));
+
+      affectedCoords.forEach((affectedCoord) => {
+        const key = hexKey(affectedCoord);
+        const affectedTile = tilesMap.get(key);
+        if (affectedTile) {
+          const neighbors = getHexNeighbors(affectedCoord);
+          const neighborTypes: TileType[] = [];
+          neighbors.forEach((neighborCoord) => {
+            const neighborKey = hexKey(neighborCoord);
+            const neighbor = tilesMap.get(neighborKey);
+            if (neighbor && neighbor.type !== affectedTile.type) {
+              neighborTypes.push(neighbor.type);
+            }
+          });
+          affectedTile.neighborTypes = neighborTypes;
+        }
+      });
+    },
+    []
+  );
 
   // Handle tile hover
   const handleTileHover = useCallback(
@@ -262,9 +280,9 @@ const TILES_STORAGE_KEY = "village-game-tiles";
       if (tile.owned && !tile.isVillage) {
         const currentLevel = tile.level || 1;
         if (currentLevel >= 100) return; // Max level reached
-        
+
         const upgradeCost = calculateUpgradeCost(tile.type, currentLevel);
-        
+
         // Check if can afford upgrade
         if (
           resources.food >= upgradeCost.food &&
@@ -283,7 +301,7 @@ const TILES_STORAGE_KEY = "village-game-tiles";
           const newTiles = new Map(tiles);
           const newLevel = currentLevel + 1;
           const newBonus = calculateTileBonus(tile.type, newLevel);
-          
+
           newTiles.set(hexKey(tile.coordinate), {
             ...tile,
             level: newLevel,
@@ -317,7 +335,7 @@ const TILES_STORAGE_KEY = "village-game-tiles";
 
       // Calculate cost based on tile level (distance-based)
       const tileLevel = tile.level || 0;
-      const claimCost = tile.isVillage 
+      const claimCost = tile.isVillage
         ? calculateVillageClaimCost(tileLevel) // 100x power for villages
         : calculateTileClaimCost(tileLevel);
 
@@ -347,13 +365,13 @@ const TILES_STORAGE_KEY = "village-game-tiles";
         // Otherwise keep the level (already set based on distance)
         bonus: calculateTileBonus(tile.type, tileLevel),
       };
-      
+
       // If claiming a village, transfer its village state
       if (tile.isVillage && tile.villageState) {
         // TODO: Merge village state with player's village state
         // For now, just claim it
       }
-      
+
       newTiles.set(hexKey(tile.coordinate), claimedTile);
 
       // Update visibility: owned tiles + 2 rings visible
@@ -395,7 +413,15 @@ const TILES_STORAGE_KEY = "village-game-tiles";
 
       setTiles(newTiles);
     },
-    [tiles, canAfford, resources, setResources, setIsVillagePanelOpen, hasDragged, updateNeighborTypes]
+    [
+      tiles,
+      canAfford,
+      resources,
+      setResources,
+      setIsVillagePanelOpen,
+      hasDragged,
+      updateNeighborTypes,
+    ]
   );
 
   // Update village level in tiles when villageLevel changes
@@ -497,30 +523,39 @@ const TILES_STORAGE_KEY = "village-game-tiles";
   }, []);
 
   // Handle mouse drag for panning
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    // Only start dragging on left mouse button and not on interactive elements
-    if (e.button === 0 && !(e.target as HTMLElement).closest('button, a, [role="button"]')) {
-      setIsDragging(true);
-      setHasDragged(false);
-      setDragStart({ x: e.clientX, y: e.clientY });
-      setPanStart({ x: panX, y: panY });
-      e.preventDefault();
-    }
-  }, [panX, panY]);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (isDragging) {
-      const deltaX = e.clientX - dragStart.x;
-      const deltaY = e.clientY - dragStart.y;
-      // Only consider it a drag if moved more than 5 pixels
-      if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
-        setHasDragged(true);
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      // Only start dragging on left mouse button and not on interactive elements
+      if (
+        e.button === 0 &&
+        !(e.target as HTMLElement).closest('button, a, [role="button"]')
+      ) {
+        setIsDragging(true);
+        setHasDragged(false);
+        setDragStart({ x: e.clientX, y: e.clientY });
+        setPanStart({ x: panX, y: panY });
+        e.preventDefault();
       }
-      setPanX(panStart.x + deltaX);
-      setPanY(panStart.y + deltaY);
-      e.preventDefault();
-    }
-  }, [isDragging, dragStart, panStart]);
+    },
+    [panX, panY]
+  );
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (isDragging) {
+        const deltaX = e.clientX - dragStart.x;
+        const deltaY = e.clientY - dragStart.y;
+        // Only consider it a drag if moved more than 5 pixels
+        if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+          setHasDragged(true);
+        }
+        setPanX(panStart.x + deltaX);
+        setPanY(panStart.y + deltaY);
+        e.preventDefault();
+      }
+    },
+    [isDragging, dragStart, panStart]
+  );
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
@@ -572,7 +607,7 @@ const TILES_STORAGE_KEY = "village-game-tiles";
       />
 
       {/* Full screen map */}
-      <div 
+      <div
         className="w-full h-full overflow-hidden cursor-grab active:cursor-grabbing"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}

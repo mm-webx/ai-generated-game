@@ -1,4 +1,4 @@
-import { HexCoordinate, HexTile, ResourceBonus, TileType } from "./types";
+import { HexCoordinate, HexTile, ResourceBonus, TileType, TileCost } from "./types";
 import { VillageState } from "../village/types";
 
 /**
@@ -196,6 +196,7 @@ export function calculateUpgradeCost(type: TileType, currentLevel: number): Tile
     food: Math.round(baseCost.food * costMultiplier * multipliers.food),
     wood: Math.round(baseCost.wood * costMultiplier * multipliers.wood),
     stone: Math.round(baseCost.stone * costMultiplier * multipliers.stone),
+    power: 0, // Upgrades don't require power
   };
 }
 
@@ -355,6 +356,13 @@ export function generateVillageState(distance: number): VillageState {
       warrior: Math.floor(buildingUpgrades * 2),
       archer: Math.floor(buildingUpgrades),
       mage: Math.floor(buildingUpgrades / 2),
+    },
+    masters: {
+      farmer: 0,
+      lumberjack: 0,
+      stonemason: 0,
+      miner: 0,
+      scholar: 0,
     },
   };
 }

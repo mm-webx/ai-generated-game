@@ -218,15 +218,16 @@ export function TileInfoPanel({
                     {Object.entries(upgradeCost).map(([key, cost]) => {
                       const Icon = RESOURCE_ICONS[key as keyof typeof RESOURCE_ICONS];
                       const color = RESOURCE_COLORS[key as keyof typeof RESOURCE_COLORS];
-                      const hasEnough = resources[key as keyof typeof resources] >= cost;
+                      const costValue = cost as number;
+                      const hasEnough = resources[key as keyof typeof resources] >= costValue;
                       return (
                         <Badge
                           key={key}
                           variant="outline"
                           className={`gap-1 text-xs ${!hasEnough ? 'border-destructive text-destructive' : ''}`}
                         >
-                          <Icon className={`h-3 w-3 ${color}`} />
-                          {cost}
+                          <Icon className={`h-3 h-3 ${color}`} />
+                          {costValue}
                         </Badge>
                       );
                     })}
@@ -245,23 +246,24 @@ export function TileInfoPanel({
             {!tile.owned && tile.visibility === "visible" && claimCost && (
               <div className="flex items-center gap-2 min-w-fit">
                 <span className="text-sm font-semibold">Cost to Claim:</span>
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {Object.entries(claimCost).map(([key, cost]) => {
-                    const Icon = RESOURCE_ICONS[key as keyof typeof RESOURCE_ICONS];
-                    const color = RESOURCE_COLORS[key as keyof typeof RESOURCE_COLORS];
-                    const hasEnough = resources[key as keyof typeof resources] >= cost;
-                    return (
-                      <Badge
-                        key={key}
-                        variant="outline"
-                        className={`gap-1 text-xs ${!hasEnough ? 'border-destructive text-destructive' : ''}`}
-                      >
-                        <Icon className={`h-3 w-3 ${color}`} />
-                        {cost}
-                      </Badge>
-                    );
-                  })}
-                </div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {Object.entries(claimCost).map(([key, cost]) => {
+                      const Icon = RESOURCE_ICONS[key as keyof typeof RESOURCE_ICONS];
+                      const color = RESOURCE_COLORS[key as keyof typeof RESOURCE_COLORS];
+                      const costValue = cost as number;
+                      const hasEnough = resources[key as keyof typeof resources] >= costValue;
+                      return (
+                        <Badge
+                          key={key}
+                          variant="outline"
+                          className={`gap-1 text-xs ${!hasEnough ? 'border-destructive text-destructive' : ''}`}
+                        >
+                          <Icon className={`h-3 w-3 ${color}`} />
+                          {costValue}
+                        </Badge>
+                      );
+                    })}
+                  </div>
                 {!canAffordClaim && (
                   <Badge variant="destructive" className="text-xs">
                     Insufficient resources

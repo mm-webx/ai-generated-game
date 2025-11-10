@@ -1,6 +1,13 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { useTimeControl } from "../game-header";
@@ -21,12 +28,13 @@ const RESOURCE_ICONS = {
   technology: FlaskConical,
 };
 
-const RESOURCE_COLORS = {
+const RESOURCE_COLORS: Record<keyof Resources, string> = {
   food: "text-green-600",
   wood: "text-amber-600",
   stone: "text-slate-600",
   diamond: "text-cyan-600",
   technology: "text-blue-600",
+  power: "text-red-600",
 };
 
 export function GuildMastersPanel({
@@ -47,7 +55,7 @@ export function GuildMastersPanel({
   };
 
   const formatCost = (cost: Resources) => {
-    const parts: JSX.Element[] = [];
+    const parts: React.ReactElement[] = [];
     if (cost.food > 0) {
       const Icon = RESOURCE_ICONS.food;
       const hasEnough = resources.food >= cost.food;
@@ -55,7 +63,9 @@ export function GuildMastersPanel({
         <Badge
           key="food"
           variant="outline"
-          className={`gap-1 text-xs ${!hasEnough ? 'border-destructive text-destructive' : ''}`}
+          className={`gap-1 text-xs ${
+            !hasEnough ? "border-destructive text-destructive" : ""
+          }`}
         >
           <Icon className="w-3 h-3 text-green-500" />
           {cost.food}
@@ -69,7 +79,9 @@ export function GuildMastersPanel({
         <Badge
           key="wood"
           variant="outline"
-          className={`gap-1 text-xs ${!hasEnough ? 'border-destructive text-destructive' : ''}`}
+          className={`gap-1 text-xs ${
+            !hasEnough ? "border-destructive text-destructive" : ""
+          }`}
         >
           <Icon className="w-3 h-3 text-amber-600" />
           {cost.wood}
@@ -83,7 +95,9 @@ export function GuildMastersPanel({
         <Badge
           key="stone"
           variant="outline"
-          className={`gap-1 text-xs ${!hasEnough ? 'border-destructive text-destructive' : ''}`}
+          className={`gap-1 text-xs ${
+            !hasEnough ? "border-destructive text-destructive" : ""
+          }`}
         >
           <Icon className="w-3 h-3 text-slate-400" />
           {cost.stone}
@@ -97,7 +111,9 @@ export function GuildMastersPanel({
         <Badge
           key="diamond"
           variant="outline"
-          className={`gap-1 text-xs ${!hasEnough ? 'border-destructive text-destructive' : ''}`}
+          className={`gap-1 text-xs ${
+            !hasEnough ? "border-destructive text-destructive" : ""
+          }`}
         >
           <Icon className="w-3 h-3 text-cyan-500" />
           {cost.diamond}
@@ -111,7 +127,9 @@ export function GuildMastersPanel({
         <Badge
           key="technology"
           variant="outline"
-          className={`gap-1 text-xs ${!hasEnough ? 'border-destructive text-destructive' : ''}`}
+          className={`gap-1 text-xs ${
+            !hasEnough ? "border-destructive text-destructive" : ""
+          }`}
         >
           <Icon className="w-3 h-3 text-blue-500" />
           {cost.technology}
@@ -145,9 +163,15 @@ export function GuildMastersPanel({
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-2">
-                  <Icon className={`w-5 h-5 ${RESOURCE_COLORS[masterDef.resourceType]}`} />
+                  <Icon
+                    className={`w-5 h-5 ${
+                      RESOURCE_COLORS[masterDef.resourceType]
+                    }`}
+                  />
                   <div>
-                    <CardTitle className="text-base">{masterDef.name}</CardTitle>
+                    <CardTitle className="text-base">
+                      {masterDef.name}
+                    </CardTitle>
                     <CardDescription className="text-xs mt-0.5">
                       {masterDef.description}
                     </CardDescription>
@@ -170,7 +194,8 @@ export function GuildMastersPanel({
                 </div>
                 {count > 0 && (
                   <div className="mt-1">
-                    <span className="font-medium">Current:</span> {count} master{count !== 1 ? 's' : ''} ({masterDef.bonusPercent}% each)
+                    <span className="font-medium">Current:</span> {count} master
+                    {count !== 1 ? "s" : ""} ({masterDef.bonusPercent}% each)
                   </div>
                 )}
               </div>
@@ -189,7 +214,9 @@ export function GuildMastersPanel({
                 size="sm"
                 variant="default"
               >
-                {!affordable ? "Insufficient resources" : `Hire ${masterDef.name}`}
+                {!affordable
+                  ? "Insufficient resources"
+                  : `Hire ${masterDef.name}`}
               </Button>
             </CardContent>
           </Card>
@@ -198,4 +225,3 @@ export function GuildMastersPanel({
     </div>
   );
 }
-

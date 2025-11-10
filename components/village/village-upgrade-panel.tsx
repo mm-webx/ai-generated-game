@@ -65,7 +65,7 @@ export function VillageUpgradePanel({
 
   // Get resource summary badges
   const getResourceSummary = () => {
-    const parts: JSX.Element[] = [];
+    const parts: React.ReactElement[] = [];
     Object.entries(buildingBonuses).forEach(([key, value]) => {
       if (value && value > 0) {
         const Icon = RESOURCE_ICONS[key as keyof typeof RESOURCE_ICONS];

@@ -1,12 +1,13 @@
 "use client";
 
+import React from "react";
 import { HexTile as HexTileType, TileCost, TileType } from "./types";
 import { HexTile } from "./HexTile";
 import { calculateTileClaimCost, calculateVillageClaimCost } from "./utils";
 
 // Generate transition texture patterns for terrain combinations
 function generateTransitionPatterns() {
-  const patterns: JSX.Element[] = [];
+  const patterns: React.ReactElement[] = [];
   const createdPatterns = new Set<string>();
 
   // Common transition combinations
@@ -83,8 +84,8 @@ function generateTransitionPatterns() {
   return patterns;
 }
 
-function getBasePatternElements(type: TileType): JSX.Element[] {
-  const elements: JSX.Element[] = [];
+function getBasePatternElements(type: TileType): React.ReactElement[] {
+  const elements: React.ReactElement[] = [];
   
   switch (type) {
     case "forest":
@@ -137,8 +138,8 @@ function getBasePatternElements(type: TileType): JSX.Element[] {
   return elements;
 }
 
-function getTransitionElements(fromType: TileType, toType: TileType): JSX.Element[] {
-  const elements: JSX.Element[] = [];
+function getTransitionElements(fromType: TileType, toType: TileType): React.ReactElement[] {
+  const elements: React.ReactElement[] = [];
   
   // Add subtle transition elements on edges
   // These create a gradient-like effect

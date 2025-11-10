@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { UnitType, UNIT_DEFINITIONS } from "./types";
 import { Resources } from "../game/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
@@ -41,7 +42,7 @@ export function RecruitmentPanel({
   };
 
   const formatCost = (cost: Resources) => {
-    const parts: JSX.Element[] = [];
+    const parts: React.ReactElement[] = [];
     if (cost.food > 0) {
       const Icon = RESOURCE_ICONS.food;
       const hasEnough = resources.food >= cost.food;
