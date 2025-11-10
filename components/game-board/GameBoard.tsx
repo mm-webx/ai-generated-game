@@ -583,7 +583,7 @@ export function GameBoard({
   return (
     <div className="w-full h-full flex flex-col bg-background relative">
       {/* Minimal header overlay */}
-      <div className="absolute top-2 left-2 z-10 bg-background/90 backdrop-blur-sm border rounded-lg px-3 py-2 shadow-lg">
+      <div className="absolute top-2 left-2 z-10 bg-background/90 backdrop-blur-sm border rounded-lg px-3 py-2 shadow-lg hidden">
         <div className="flex items-center gap-4 text-sm">
           <div className="text-muted-foreground">
             Owned:{" "}
